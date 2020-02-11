@@ -5,9 +5,9 @@ import greenfoot.*;
  * The gun is fired by hitting the 'space' key. 'z' releases a proton wave.
  * 
  * @author Poul Henriksen
- * @author Michael Kölling
+ * @author Michael Kölling a
  * 
- * @version 1.1
+ * @version 1.2
  */
 public class Rocket extends SmoothMover
 {
@@ -24,6 +24,8 @@ public class Rocket extends SmoothMover
     public Rocket()
     {
         reloadDelayCount = 5;
+        
+        addToVelocity(new Vector(180, 0.1));
     }
 
     /**
@@ -34,6 +36,24 @@ public class Rocket extends SmoothMover
     {
         checkKeys();
         reloadDelayCount++;
+        move();
+    }
+    
+    /*
+     * This programs the speed of the rocket as the UP button is pressed.
+     */
+    private void ignite(boolean boosterOn)
+    {
+        if(boosterOn)
+        {
+            setImage("rocketWithThrust.png");
+            addToVelocity(new Vector(getRotation(), 0.3));
+        }
+        
+        if(!boosterOn)
+        {
+            setImage("rocket.png");
+        }
     }
     
     /**
@@ -45,6 +65,18 @@ public class Rocket extends SmoothMover
         {
             fire();
         }
+        
+        if (Greenfoot.isKeyDown("left"))
+        {
+            turn(-5);
+        }
+        
+        if (Greenfoot.isKeyDown("right"))
+        {
+            turn(5);
+        }
+        
+        ignite(Greenfoot.isKeyDown("up")); //programs rocket movement
     }
     
     /**

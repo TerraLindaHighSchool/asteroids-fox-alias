@@ -77,6 +77,12 @@ public class Rocket extends SmoothMover
         }
         
         ignite(Greenfoot.isKeyDown("up")); //programs rocket movement
+        
+        //slows down the momentum of the rocket when player feels it's going too fast.
+        if (Greenfoot.isKeyDown("down"))
+        {
+            move(-5);
+        }
     }
     
     /**

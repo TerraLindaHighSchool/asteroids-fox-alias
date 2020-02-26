@@ -20,11 +20,15 @@ public class ProtonWave extends Actor
      */
     private static GreenfootImage[] images;
     
+    private int currentImage = 0;
+    
     /**
      * Create a new proton wave.
      */
     public ProtonWave() 
     {
+        setImage("wave.png");
+        Greenfoot.playSound("proton.wav");
         initializeImages();
     }
     
@@ -48,11 +52,24 @@ public class ProtonWave extends Actor
         }
     }
     
+    //This method animates the proton wave!
+    private void grow()
+    {
+        setImage(images[currentImage]);
+        currentImage++;
+        
+        if(currentImage == images.length)
+        {
+            getWorld().removeObject(this);
+        }
+    }
+    
     /**
      * Act for the proton wave is: grow and check whether we hit anything.
      */
     public void act()
     { 
+        grow();
     }
     
 }

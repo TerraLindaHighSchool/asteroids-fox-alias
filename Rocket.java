@@ -1,3 +1,4 @@
+
 import greenfoot.*;
 
 /**
@@ -13,11 +14,11 @@ public class Rocket extends SmoothMover
 {
     private static final int gunReloadTime = 5; // The minimum delay between firing the gun.
 
-    private static final int waveReloadTime = 10; //minimum delay for the proton wave.
+    private static final int waveReloadTime = 100; //minimum delay for the proton wave.
     
     private int reloadDelayCount;               // How long ago we fired the gun the last time.
     
-    private int reloadDelayWaveCount; //How long 
+    private int reloadDelayWaveCount; //How long ago we fired the wave.
     
     private GreenfootImage rocket = new GreenfootImage("rocket.png");    
     private GreenfootImage rocketWithThrust = new GreenfootImage("rocketWithThrust.png");
@@ -28,7 +29,7 @@ public class Rocket extends SmoothMover
     public Rocket()
     {
         reloadDelayCount = 5;
-        
+        reloadDelayWaveCount = 3;
         addToVelocity(new Vector(180, 0.1));
     }
 
@@ -40,6 +41,7 @@ public class Rocket extends SmoothMover
     {
         checkKeys();
         reloadDelayCount++;
+        reloadDelayWaveCount++;
         move();
         checkCollision();
     }
@@ -52,7 +54,8 @@ public class Rocket extends SmoothMover
          if(reloadDelayWaveCount >= waveReloadTime)
          {
             getWorld().addObject(new ProtonWave(), rocketX, rocketY);
-         }
+            reloadDelayWaveCount = 0;
+        }
     }
     
     /*

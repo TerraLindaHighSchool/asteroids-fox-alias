@@ -1,4 +1,5 @@
 import greenfoot.*;
+import java.util.List;
 
 /**
  * A proton wave that expands and destroys asteroids in its path.
@@ -64,12 +65,28 @@ public class ProtonWave extends Actor
         }
     }
     
+    /*
+     * To check whether the wave touches an asteroid, and cause damage if it does. 
+     */
+    private void checkCollision()
+    {
+        int range = getImage().getWidth() / 2;
+            
+        List<Asteroid> nearbyAsteroids = getObjectsInRange(range, Asteroid.class);
+        
+        for(Asteroid asteroid : nearbyAsteroids)
+        {
+            asteroid.hit(DAMAGE);
+        }
+    }
+    
     /**
      * Act for the proton wave is: grow and check whether we hit anything.
      */
     public void act()
     { 
         grow();
+        checkCollision();
     }
     
 }

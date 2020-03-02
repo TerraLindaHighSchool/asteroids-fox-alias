@@ -70,23 +70,24 @@ public class ProtonWave extends Actor
      */
     private void checkCollision()
     {
-        int range = getImage().getWidth() / 2;
+        int radiusOfWave = getImage().getWidth() / 2;
             
-        List<Asteroid> nearbyAsteroids = getObjectsInRange(range, Asteroid.class);
-        
-        for(Asteroid asteroid : nearbyAsteroids)
-        {
-            asteroid.hit(DAMAGE);
-        }
+        List<Asteroid> nearByAsteroids = getObjectsInRange(radiusOfWave, Asteroid.class);
+ 
+            for(Asteroid asteroid : nearByAsteroids)
+            {
+                ((Asteroid) asteroid).hit(DAMAGE);
+          
+            }
     }
-    
+        
     /**
      * Act for the proton wave is: grow and check whether we hit anything.
      */
     public void act()
     { 
-        grow();
         checkCollision();
+        grow();
     }
     
 }

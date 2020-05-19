@@ -74,11 +74,11 @@ public class ProtonWave extends Actor
             
         List<Asteroid> nearByAsteroids = getObjectsInRange(radiusOfWave, Asteroid.class);
  
-            for(Asteroid asteroid : nearByAsteroids)
-            {
-                ((Asteroid) asteroid).hit(DAMAGE);
-          
-            }
+        for(Asteroid asteroid : nearByAsteroids)
+        {
+            ((Asteroid) asteroid).hit(DAMAGE);
+            getWorldOfType(Space.class).updateScore(1); //updates score when asteroid is destroyed by the wave
+        }
     }
         
     /**

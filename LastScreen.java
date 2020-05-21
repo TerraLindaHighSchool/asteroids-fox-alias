@@ -1,10 +1,10 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class LastScreen here.
+ * The last part of the start screen that illustates any other details the player should know.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Jordan Miller 
+ * @version 1.0
  */
 public class LastScreen extends World
 {

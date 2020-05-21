@@ -1,10 +1,10 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class EnemiesScreen here.
+ * Part of the start screen that tells the player who their enemies are.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Jordan Miller
+ * @version 1.0
  */
 public class EnemiesScreen extends World
 {

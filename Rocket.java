@@ -51,8 +51,8 @@ public class Rocket extends SmoothMover
         int rocketX = getX();
         int rocketY = getY();
         
-         if(reloadDelayWaveCount >= waveReloadTime)
-         {
+        if(reloadDelayWaveCount >= waveReloadTime)
+        {
             getWorld().addObject(new ProtonWave(), rocketX, rocketY);
             reloadDelayWaveCount = 0;
         }

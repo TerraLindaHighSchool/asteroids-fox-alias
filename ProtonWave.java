@@ -73,11 +73,18 @@ public class ProtonWave extends Actor
         int radiusOfWave = getImage().getWidth() / 2;
             
         List<Asteroid> nearByAsteroids = getObjectsInRange(radiusOfWave, Asteroid.class);
- 
+        List<Aliens> nearByAliens = getObjectsInRange(radiusOfWave, Aliens.class);
+        
         for(Asteroid asteroid : nearByAsteroids)
         {
             ((Asteroid) asteroid).hit(DAMAGE);
             getWorldOfType(Space.class).updateScore(1); //updates score when asteroid is destroyed by the wave
+        }
+        
+        for(Aliens alien : nearByAliens)
+        {
+            getWorld().removeObject(alien);
+            getWorldOfType(Space.class).updateScore(1);
         }
     }
         

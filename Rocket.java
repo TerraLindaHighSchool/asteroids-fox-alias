@@ -23,6 +23,8 @@ public class Rocket extends SmoothMover
     private GreenfootImage rocket = new GreenfootImage("rocket.png");    
     private GreenfootImage rocketWithThrust = new GreenfootImage("rocketWithThrust.png");
 
+    private int lives = 10;
+    
     /**
      * Initialise this rocket.
      */
@@ -43,6 +45,8 @@ public class Rocket extends SmoothMover
         reloadDelayCount++;
         reloadDelayWaveCount++;
         move();
+        gainLives();
+        countLives();
         checkCollision();
     }
     
@@ -83,13 +87,30 @@ public class Rocket extends SmoothMover
         if(getOneIntersectingObject(Asteroid.class) != null)
         {
             Space space = (Space) getWorld();
-            space.addObject(new Explosion(), getX(), getY());
-            
-            space.removeObject(this);
-            
-            space.gameOver();
+            if(lives <= 0)
+            {
+                space.addObject(new Explosion(), getX(), getY());
+                space.removeObject(this);
+                space.gameOver();
+            } else  {
+                lives--;
+                Greenfoot.playSound("lifeLost.wav");
+            }
         }
-        
+    }
+    
+    public void countLives()
+    {
+        getWorld().showText("Lives: " + lives, 50, 20);
+    }
+    
+    private void gainLives()
+    {
+        if(isTouching(Lives.class))
+        {
+            lives++;
+            Greenfoot.playSound("lifeGained.wav"); 
+        } 
     }
     
     /**
@@ -139,5 +160,4 @@ public class Rocket extends SmoothMover
             reloadDelayCount = 0;
         }
     }
-    
 }

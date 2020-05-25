@@ -1,4 +1,5 @@
 import greenfoot.*;
+import java.util.List;
 
 /**
  * Space. Something for rockets to fly in. Covered with lots of different stars.
@@ -9,8 +10,9 @@ import greenfoot.*;
 public class Space extends World
 {
     private Counter scoreCounter;
-    private int startAsteroids = 3;
-    //private Color starBrightness;
+    private int startAsteroids = 4;
+    private int startLives = 2;
+    private int startAliens = 3;
 
     /**
      * Create the space and all objects within it.
@@ -25,15 +27,40 @@ public class Space extends World
         
         Rocket rocket = new Rocket();
         addObject(rocket, getWidth()/2 + 100, getHeight()/2);
+       
+        paintStars(400); //Paints 400 stars.
         
         addAsteroids(startAsteroids);
-        paintStars(400); //Paints 400 stars.
+        addLives(startLives);
+        addAliens(startAliens);
         
         scoreCounter = new Counter("Score: ");
         addObject(scoreCounter, 60, 480);
 
         Explosion.initializeImages();
         ProtonWave.initializeImages();
+    }
+    
+    public void act()
+    {
+        List<Asteroid> asteroids = getObjects(Asteroid.class);
+        List<Lives> lives = getObjects(Lives.class);
+        List<Aliens> aliens = getObjects(Aliens.class);
+        
+        if(asteroids.size() <= 2)
+        {
+            addAsteroids(startAsteroids);
+        }
+        
+        if(lives.size() <= 1)
+        {
+            addLives(startLives);
+        }
+        
+        if(aliens.size() <= 2)
+        {
+            addAliens(startAliens);
+        }
     }
     
     /**
@@ -47,6 +74,27 @@ public class Space extends World
             int x = Greenfoot.getRandomNumber(getWidth()/2);
             int y = Greenfoot.getRandomNumber(getHeight()/2);
             addObject(new Asteroid(), x, y);
+        }
+    }
+    
+    private void addLives(int count)
+    {
+        for(int i = 0; i < count; i++)
+        {
+            int x = Greenfoot.getRandomNumber(getWidth()/2);
+            int y = Greenfoot.getRandomNumber(getHeight()/2);
+            addObject(new Lives(), x, y);
+        } 
+        //Problem: Lives decrement way too fast
+    }
+    
+    private void addAliens(int count)
+    {
+        for(int i = 0; i < count; i++)
+        {
+            int x = Greenfoot.getRandomNumber(getWidth()/2);
+            int y = Greenfoot.getRandomNumber(getHeight()/2);
+            addObject(new Aliens(), x, y);
         }
     }
     

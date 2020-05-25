@@ -1,5 +1,5 @@
-
 import greenfoot.*;
+import java.util.List;
 
 /**
  * A rocket that can be controlled by the arrowkeys: up, left, right.
@@ -48,6 +48,7 @@ public class Rocket extends SmoothMover
         gainLives();
         countLives();
         checkCollision();
+        checkAlienCollision();
     }
     
     private void startProtonWave()
@@ -82,7 +83,7 @@ public class Rocket extends SmoothMover
     /* 
      * This method checks whether the rocket collided with any asteroids.
      */
-    private void checkCollision()
+    public void checkCollision()
     {
         if(getOneIntersectingObject(Asteroid.class) != null)
         {
@@ -95,8 +96,27 @@ public class Rocket extends SmoothMover
             } else  {
                 lives--;
                 Greenfoot.playSound("lifeLost.wav");
+                
             }
         }
+    }
+    
+    public void checkAlienCollision()
+    {
+        if(getOneIntersectingObject(Aliens.class) != null)
+        {
+            Space space = (Space) getWorld();
+            if(lives <= 0)
+            {
+                space.addObject(new Explosion(), getX(), getY());
+                space.removeObject(this);
+                space.gameOver();
+            } else  {
+                lives--;
+                Greenfoot.playSound("lifeLost.wav");
+            }
+        }
+        //problem with getOneIntersectingObject upon asteroid and alien collision with rocket; Illegal State Exception.
     }
     
     public void countLives()

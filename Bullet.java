@@ -31,6 +31,8 @@ public class Bullet extends SmoothMover
         setRotation(rotation);
         addToVelocity(new Vector(rotation, 15));
         Greenfoot.playSound("EnergyGun.wav");
+
+        //checkAlienHit();
     }
     
     /**
@@ -45,7 +47,6 @@ public class Bullet extends SmoothMover
             life--;
             move();
             checkAsteroidHit();
-            checkAlienHit();
         }
     }
     
@@ -62,21 +63,5 @@ public class Bullet extends SmoothMover
             asteroid.hit(damage);
         }
     }
-    
-    private void checkAlienHit()
-    {
-        Aliens alien = (Aliens) getOneIntersectingObject(Aliens.class);
-        if(alien != null)
-        {
-            alien.resilience--;
-            
-            if(alien.resilience <= 0)
-            {
-                ((Space)getWorld()).updateScore(pointsToAdd);
-                Greenfoot.playSound("Explosion.wav");
-                getWorld().removeObject(this);
-                getWorld().removeObject(alien);
-            }
-        }
-    }
+
 }

@@ -8,7 +8,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Aliens extends SmoothMover
 {
-    public int resilience = 1;
+    private int resilience = 16;
+    private int pointsToAdd = 2;
     
     public Aliens()
     {
@@ -22,11 +23,23 @@ public class Aliens extends SmoothMover
     public void act() 
     {
         move();
+        checkBulletHit();
     } 
     
-    //when colliding with the rocket, the rocket loses a life
+    private void checkBulletHit()
+    {
+        if(isTouching(Bullet.class))
+        {
+            resilience--;
+            
+            if(resilience <= 0)
+            {
+                ((Space)getWorld()).updateScore(pointsToAdd);
+                Greenfoot.playSound("Explosion.wav");
+                getWorld().removeObject(this);
+            }
+        }
+    }
+    
     //when the score reaches 10, the aliens come in (optional)
-    //if it is shot down, it disappears and score updates by one
-    //They are harder to shoot down than asteroids
-    //Problem: rocket collision with the aliens, bullet collision
 }

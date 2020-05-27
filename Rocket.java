@@ -22,8 +22,12 @@ public class Rocket extends SmoothMover
     
     private GreenfootImage rocket = new GreenfootImage("rocket.png");    
     private GreenfootImage rocketWithThrust = new GreenfootImage("rocketWithThrust.png");
-
+    private double speed = 0.3;
+    
     private int lives = 10;
+    private int timer = 10;
+    
+    private boolean gameIsOver = false;
     
     /**
      * Initialise this rocket.
@@ -41,14 +45,30 @@ public class Rocket extends SmoothMover
      */
     public void act()
     {
+        Space space = (Space) getWorld();
+        
         checkKeys();
         reloadDelayCount++;
         reloadDelayWaveCount++;
         move();
+        limit();
         gainLives();
         countLives();
-        checkCollision();
-        checkAlienCollision();
+        
+        if(!gameIsOver) 
+        {
+            checkCollision();
+        }
+        
+        if(!gameIsOver) 
+        {
+            checkAlienCollision();
+        }
+        
+        if(gameIsOver) 
+        {
+            space.gameOver();
+        } 
     }
     
     private void startProtonWave()
@@ -71,7 +91,7 @@ public class Rocket extends SmoothMover
         if(boosterOn)
         {
             setImage("rocketWithThrust.png");
-            addToVelocity(new Vector(getRotation(), 0.3));
+            addToVelocity(new Vector(getRotation(), speed));
         }
         
         if(!boosterOn)
@@ -85,14 +105,16 @@ public class Rocket extends SmoothMover
      */
     public void checkCollision()
     {
-        if(getOneIntersectingObject(Asteroid.class) != null)
+        Asteroid asteroid = (Asteroid) getOneIntersectingObject(Asteroid.class);
+        
+        if(asteroid != null)
         {
             Space space = (Space) getWorld();
-            if(lives <= 0)
+           if(lives <= 0)
             {
                 space.addObject(new Explosion(), getX(), getY());
                 space.removeObject(this);
-                space.gameOver();
+                gameIsOver = true;
             } else  {
                 lives--;
                 Greenfoot.playSound("lifeLost.wav");
@@ -103,20 +125,45 @@ public class Rocket extends SmoothMover
     
     public void checkAlienCollision()
     {
-        if(getOneIntersectingObject(Aliens.class) != null)
+        Aliens alien = (Aliens) getOneIntersectingObject(Aliens.class);
+        
+        if(alien != null)
         {
             Space space = (Space) getWorld();
             if(lives <= 0)
             {
                 space.addObject(new Explosion(), getX(), getY());
                 space.removeObject(this);
-                space.gameOver();
+                gameIsOver = true;
             } else  {
-                lives--;
+                lives = lives - 2;
                 Greenfoot.playSound("lifeLost.wav");
             }
         }
         //problem with getOneIntersectingObject upon asteroid and alien collision with rocket; Illegal State Exception.
+    }
+    
+    private void limit()
+    {
+        boolean limited = false;
+        Limiter limiter = (Limiter) getOneIntersectingObject(Limiter.class);
+        
+        if(limiter != null)
+        {
+            limited = true;
+            
+            while(limited)
+            {
+                timer--;
+                speed = 0;
+                if(timer <= 0)
+                {
+                    speed = 0.3;
+                    getWorld().removeObject(limiter);
+                    limited = false;
+                }
+            }
+        }
     }
     
     public void countLives()

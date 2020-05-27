@@ -23,6 +23,7 @@ public class LastScreen extends World
     {
         if(Greenfoot.isKeyDown("enter"))
         {
+
             Greenfoot.setWorld(new Space());
         }
     }

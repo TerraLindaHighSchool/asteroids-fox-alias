@@ -13,6 +13,7 @@ public class Space extends World
     private int startAsteroids = 4;
     private int startLives = 2;
     private int startAliens = 3;
+    private int startLimiters = 1;
 
     /**
      * Create the space and all objects within it.
@@ -46,6 +47,7 @@ public class Space extends World
         List<Asteroid> asteroids = getObjects(Asteroid.class);
         List<Lives> lives = getObjects(Lives.class);
         List<Aliens> aliens = getObjects(Aliens.class);
+        List<Limiter> limiters = getObjects(Limiter.class);
         
         if(asteroids.size() <= 2)
         {
@@ -60,6 +62,11 @@ public class Space extends World
         if(aliens.size() <= 2)
         {
             addAliens(startAliens);
+        }
+        
+        if(limiters.size() <= 0)
+        {
+            addLimiters(startLimiters);
         }
     }
     
@@ -96,6 +103,16 @@ public class Space extends World
             int y = Greenfoot.getRandomNumber(getHeight()/2);
             addObject(new Aliens(), x, y);
         }
+    }
+    
+    private void addLimiters(int count)
+    {
+        for(int i = 0; i < count; i++)
+        {
+            int x = Greenfoot.getRandomNumber(getWidth()/2);
+            int y = Greenfoot.getRandomNumber(getHeight()/2);
+            addObject(new Limiter(), x, y);
+        } 
     }
     
     /*

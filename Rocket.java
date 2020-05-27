@@ -4,9 +4,10 @@ import java.util.List;
 /**
  * A rocket that can be controlled by the arrowkeys: up, left, right.
  * The gun is fired by hitting the 'space' key. 'z' releases a proton wave.
+ * When the rocket collides into an alien or an asteroid, it loses some lives.
  * 
  * @author Poul Henriksen
- * @author Michael Kölling a
+ * @author Michael Kölling and Jordan Miller
  * 
  * @version 1.2
  */
@@ -140,7 +141,6 @@ public class Rocket extends SmoothMover
                 Greenfoot.playSound("lifeLost.wav");
             }
         }
-        //problem with getOneIntersectingObject upon asteroid and alien collision with rocket; Illegal State Exception.
     }
     
     private void limit()

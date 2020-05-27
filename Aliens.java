@@ -1,10 +1,10 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Aliens here.
+ * Like asteroids, the aliens have to be shot down by the rocket.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Jordan Miller
+ * @version 2.0
  */
 public class Aliens extends SmoothMover
 {

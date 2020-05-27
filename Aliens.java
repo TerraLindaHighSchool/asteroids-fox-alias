@@ -8,12 +8,12 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Aliens extends SmoothMover
 {
-    private int resilience = 16;
-    private int pointsToAdd = 2;
+    private int resilience = 16; //Amount of resistance the alien has to the rocket's weapons
+    private int pointsToAdd = 2; //number of points to add, should the rocket shoot the alien down.
     
     public Aliens()
     {
-        super(new Vector(Greenfoot.getRandomNumber(360), 2));
+        super(new Vector(Greenfoot.getRandomNumber(360), 2)); //sets speed and direction of movement
     }
     
     /**
@@ -26,6 +26,9 @@ public class Aliens extends SmoothMover
         checkBulletHit();
     } 
     
+    /*
+     * If the alien has been hit by a bullet, resilience decrements, and if resilience is 0, then the alien disappears.
+     */
     private void checkBulletHit()
     {
         if(isTouching(Bullet.class))
@@ -40,6 +43,4 @@ public class Aliens extends SmoothMover
             }
         }
     }
-    
-    //when the score reaches 10, the aliens come in (optional)
 }

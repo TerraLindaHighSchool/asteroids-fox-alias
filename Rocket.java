@@ -23,12 +23,12 @@ public class Rocket extends SmoothMover
     
     private GreenfootImage rocket = new GreenfootImage("rocket.png");    
     private GreenfootImage rocketWithThrust = new GreenfootImage("rocketWithThrust.png");
-    private double speed = 0.3;
+    private double speed = 0.3; //The speed at which the rocket goes with thrust
     
-    private int lives = 5;
-    private int timer = 10;
+    private int lives = 5;  //Number of lives a player has
+    private int timer = 10;  
     
-    private boolean gameIsOver = false;
+    private boolean gameIsOver = false; //boolean declaring when the game is or isn't over 
     
     /**
      * Initialise this rocket.
@@ -56,6 +56,7 @@ public class Rocket extends SmoothMover
         gainLives();
         countLives();
         
+        //These if statements prevent a previous IllegalStateException error with the rocket out of the world
         if(!gameIsOver) 
         {
             checkCollision();
@@ -71,6 +72,10 @@ public class Rocket extends SmoothMover
             space.gameOver();
         }
     }
+    
+    /*
+     * Starts the proton wave as long as the player hasn't fired it in a while.
+     */
     
     private void startProtonWave()
     {
@@ -102,7 +107,7 @@ public class Rocket extends SmoothMover
     }
     
     /* 
-     * This method checks whether the rocket collided with any asteroids.
+     * This method checks whether the rocket collided with any asteroids, and decrements the lives if it has.
      */
     public void checkCollision()
     {
@@ -125,6 +130,9 @@ public class Rocket extends SmoothMover
         }
     }
     
+    /*
+     * This method checks whether the rocket has collided with any aliens, and decrements the lives by two if it has.
+     */
     public void checkAlienCollision()
     {
         Aliens alien = (Aliens) getOneIntersectingObject(Aliens.class);
@@ -169,11 +177,17 @@ public class Rocket extends SmoothMover
         }
     }
     
+    /*
+     * Codes for the lives display that shows up on the screen.
+     */
     public void countLives()
     {
         getWorld().showText("Lives: " + lives, 50, 20);
     }
     
+    /*
+     * The rocket gains a life if it has touched a heart floating by.
+     */
     private void gainLives()
     {
         if(isTouching(Lives.class))

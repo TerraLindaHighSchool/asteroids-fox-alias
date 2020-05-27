@@ -1,7 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * When the rocket hits a heart, it gains a life
+ * When the rocket hits a heart, it gains a life.
  * 
  * @author Jordan Miller
  * @version 1.0
@@ -11,7 +11,7 @@ public class Lives extends SmoothMover
     
     public Lives()
     {
-        super(new Vector(Greenfoot.getRandomNumber(360), 1));
+        super(new Vector(Greenfoot.getRandomNumber(360), 1)); //sets speed and direction of movement
     }
     
     /**
@@ -22,6 +22,7 @@ public class Lives extends SmoothMover
     {
         move();
         
+        //if it touches the rocket class, the heart disappears.
         if(isTouching(Rocket.class))
         {
             getWorld().removeObject(this);

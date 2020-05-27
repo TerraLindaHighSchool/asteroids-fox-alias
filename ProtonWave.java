@@ -4,7 +4,7 @@ import java.util.List;
 /**
  * A proton wave that expands and destroys asteroids in its path.
  * 
- * @author Michael Kölling
+ * @author Michael Kölling and Jordan Miller
  * @version 0.1
  */
 public class ProtonWave extends Actor
@@ -31,6 +31,15 @@ public class ProtonWave extends Actor
         setImage("wave.png");
         Greenfoot.playSound("proton.wav");
         initializeImages();
+    }
+    
+    /**
+     * Act for the proton wave is: grow and check whether we hit anything.
+     */
+    public void act()
+    { 
+        checkCollision();
+        grow();
     }
     
     /** 
@@ -87,14 +96,4 @@ public class ProtonWave extends Actor
             getWorldOfType(Space.class).updateScore(1);
         }
     }
-        
-    /**
-     * Act for the proton wave is: grow and check whether we hit anything.
-     */
-    public void act()
-    { 
-        checkCollision();
-        grow();
-    }
-    
 }

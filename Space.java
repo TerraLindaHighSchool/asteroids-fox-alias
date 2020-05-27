@@ -42,6 +42,9 @@ public class Space extends World
         ProtonWave.initializeImages();
     }
     
+    /*
+     * This checks to see how many of each object is in the world, and refills the world based on the current count.
+     */
     public void act()
     {
         List<Asteroid> asteroids = getObjects(Asteroid.class);
@@ -84,6 +87,10 @@ public class Space extends World
         }
     }
     
+    /**
+     * Add a given number of hearts to the world. Hearts are only added into
+     * the left half of the world.
+     */
     private void addLives(int count)
     {
         for(int i = 0; i < count; i++)
@@ -94,6 +101,10 @@ public class Space extends World
         } 
     }
     
+    /**
+     * Add a given number of aliens to the world. Aliens are only added into
+     * the left half of the world.
+     */
     private void addAliens(int count)
     {
         for(int i = 0; i < count; i++)

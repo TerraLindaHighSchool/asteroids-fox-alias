@@ -1,7 +1,7 @@
 import greenfoot.*;
 
 /**
- * A bullet that can hit asteroids.
+ * A bullet that can hit asteroids and aliens.
  * 
  * @author Poul Henriksen
  * @author Michael Kölling
@@ -31,8 +31,6 @@ public class Bullet extends SmoothMover
         setRotation(rotation);
         addToVelocity(new Vector(rotation, 15));
         Greenfoot.playSound("EnergyGun.wav");
-
-        //checkAlienHit();
     }
     
     /**

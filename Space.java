@@ -92,7 +92,6 @@ public class Space extends World
             int y = Greenfoot.getRandomNumber(getHeight()/2);
             addObject(new Lives(), x, y);
         } 
-        //Problem: Lives decrement way too fast
     }
     
     private void addAliens(int count)

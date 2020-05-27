@@ -25,7 +25,7 @@ public class Rocket extends SmoothMover
     private GreenfootImage rocketWithThrust = new GreenfootImage("rocketWithThrust.png");
     private double speed = 0.3;
     
-    private int lives = 10;
+    private int lives = 5;
     private int timer = 10;
     
     private boolean gameIsOver = false;
@@ -69,7 +69,7 @@ public class Rocket extends SmoothMover
         if(gameIsOver) 
         {
             space.gameOver();
-        } 
+        }
     }
     
     private void startProtonWave()
@@ -115,11 +115,12 @@ public class Rocket extends SmoothMover
             {
                 space.addObject(new Explosion(), getX(), getY());
                 space.removeObject(this);
+                space.removeObject(asteroid);
                 gameIsOver = true;
             } else  {
                 lives--;
+                space.removeObject(asteroid);
                 Greenfoot.playSound("lifeLost.wav");
-                
             }
         }
     }
@@ -135,9 +136,11 @@ public class Rocket extends SmoothMover
             {
                 space.addObject(new Explosion(), getX(), getY());
                 space.removeObject(this);
+                space.removeObject(alien);
                 gameIsOver = true;
             } else  {
                 lives = lives - 2;
+                space.removeObject(alien);
                 Greenfoot.playSound("lifeLost.wav");
             }
         }

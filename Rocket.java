@@ -14,12 +14,12 @@ import java.util.List;
 public class Rocket extends SmoothMover
 {
     private static final int gunReloadTime = 5; // The minimum delay between firing the gun.
-
     private static final int waveReloadTime = 100; //minimum delay for the proton wave.
+    private static final int shadowReloadTime = 500;
     
-    private int reloadDelayCount;               // How long ago we fired the gun the last time.
-    
+    private int reloadDelayCount; // How long ago we fired the gun the last time.
     private int reloadDelayWaveCount; //How long ago we fired the wave.
+    private int reloadDelayShadowCount;
     
     private GreenfootImage rocket = new GreenfootImage("rocket.png");    
     private GreenfootImage rocketWithThrust = new GreenfootImage("rocketWithThrust.png");
@@ -27,7 +27,9 @@ public class Rocket extends SmoothMover
     
     private int lives = 5;  //Number of lives a player has
     private int timer = 500; 
+    private int shadowTime = 500;
     private boolean limited = false;
+    private boolean cloaked = false;
     
     private boolean gameIsOver = false; //boolean declaring when the game is or isn't over 
     
@@ -38,6 +40,7 @@ public class Rocket extends SmoothMover
     {
         reloadDelayCount = 5;
         reloadDelayWaveCount = 3;
+        reloadDelayShadowCount = 0;
         
         if(limited)
         {
@@ -49,8 +52,7 @@ public class Rocket extends SmoothMover
     }
 
     /**
-     * Do what a rocket's gotta do. (Which is: mostly flying about, and turning,
-     * accelerating and shooting when the right keys are pressed.)
+     * Do what a rocket's gotta do.
      */
     public void act()
     {
@@ -59,10 +61,17 @@ public class Rocket extends SmoothMover
         checkKeys();
         reloadDelayCount++;
         reloadDelayWaveCount++;
+        reloadDelayShadowCount++;
         move();
-        limit();
+        
+        if(!cloaked)
+        {
+            limit();
+        }
+        
         gainLives();
         countLives();
+        shadowMode();
         
         //These if statements prevent a previous IllegalStateException error with the rocket out of the world
         if(!gameIsOver) 
@@ -80,7 +89,7 @@ public class Rocket extends SmoothMover
             space.gameOver();
         }
     }
-    
+
     /*
      * Starts the proton wave as long as the player hasn't fired it in a while.
      */
@@ -95,6 +104,50 @@ public class Rocket extends SmoothMover
             getWorld().addObject(new ProtonWave(), rocketX, rocketY);
             reloadDelayWaveCount = 0;
         }
+    }
+    
+    private void shadowMode()
+    {
+        if(cloaked)
+        {
+            if(reloadDelayShadowCount >= shadowReloadTime)
+            {   
+                getImage().setTransparency(100);
+                shadowTimer();
+                getWorld().showText("Time: " + shadowTime, 250, 300);
+            }
+        }
+        
+        if(!Greenfoot.isKeyDown("tab"))
+        {
+            shadowTimer();
+            
+            if(shadowTime <= 0)
+            {
+                getImage().setTransparency(255);
+                cloaked = false;
+            }
+        }
+        
+        if(!cloaked)
+        {
+            restartTimer();
+        }
+                        
+        getWorld().showText("cloaked: " + cloaked, 450, 300);
+    }
+    
+    private void restartTimer()
+    {
+        if(shadowTime == 0)
+        {
+            shadowTime = 500;
+        }
+    }
+    
+    private void shadowTimer()
+    {
+        shadowTime--;
     }
     
     /*
@@ -123,17 +176,20 @@ public class Rocket extends SmoothMover
         
         if(asteroid != null)
         {
-            Space space = (Space) getWorld();
-           if(lives <= 0)
+            if(!cloaked)
             {
-                space.addObject(new Explosion(), getX(), getY());
-                space.removeObject(this);
-                space.removeObject(asteroid);
-                gameIsOver = true;
-            } else  {
-                lives--;
-                space.removeObject(asteroid);
-                Greenfoot.playSound("lifeLost.wav");
+                Space space = (Space) getWorld();
+                if(lives <= 0)
+                {
+                    space.addObject(new Explosion(), getX(), getY());
+                    space.removeObject(this);
+                    space.removeObject(asteroid);
+                    gameIsOver = true;
+                } else  {
+                    lives--;
+                    space.removeObject(asteroid);
+                    Greenfoot.playSound("lifeLost.wav");
+                }
             }
         }
     }
@@ -147,17 +203,20 @@ public class Rocket extends SmoothMover
         
         if(alien != null)
         {
-            Space space = (Space) getWorld();
-            if(lives <= 0)
+            if(!cloaked)
             {
-                space.addObject(new Explosion(), getX(), getY());
-                space.removeObject(this);
-                space.removeObject(alien);
-                gameIsOver = true;
-            } else  {
-                lives = lives - 2;
-                space.removeObject(alien);
-                Greenfoot.playSound("lifeLost.wav");
+                Space space = (Space) getWorld();
+                if(lives <= 0)
+                {
+                    space.addObject(new Explosion(), getX(), getY());
+                    space.removeObject(this);
+                    space.removeObject(alien);
+                    gameIsOver = true;
+                } else  {
+                    lives = lives - 2;
+                    space.removeObject(alien);
+                    Greenfoot.playSound("lifeLost.wav");
+                }
             }
         }
     }
@@ -180,14 +239,14 @@ public class Rocket extends SmoothMover
         }
         
         if(timer <= 0)
-            {
-                thrustSpeed = 0.3;
-                getWorld().removeObject(limiter);
-                getWorld().showText(" " , 300, 400);
-                limited = false;
-                limiter.speed = 2;
-                timer = 500;
-            }
+        {
+            thrustSpeed = 0.3;
+            getWorld().removeObject(limiter);
+            getWorld().showText(" " , 300, 400);
+            limited = false;
+            limiter.speed = 2;
+            timer = 500;
+        }
     }
     
     private void countTime()
@@ -256,7 +315,16 @@ public class Rocket extends SmoothMover
                 startProtonWave();
             }
         }
+        
+        if(Greenfoot.isKeyDown("tab"))
+        {
+            if(!limited)
+            {
+                cloaked = true;
+            }
+        } 
     }
+
     
     /**
      * Fire a bullet if the gun is ready.

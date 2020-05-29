@@ -1,4 +1,4 @@
-import greenfoot.*;
+ import greenfoot.*;
 import java.util.List;
 
 /**
@@ -23,10 +23,11 @@ public class Rocket extends SmoothMover
     
     private GreenfootImage rocket = new GreenfootImage("rocket.png");    
     private GreenfootImage rocketWithThrust = new GreenfootImage("rocketWithThrust.png");
-    private double speed = 0.3; //The speed at which the rocket goes with thrust
+    private double thrustSpeed = 0.3; //The speed at which the rocket goes with thrust
     
     private int lives = 5;  //Number of lives a player has
-    private int timer = 10;  
+    private int timer = 500; 
+    private boolean limited = false;
     
     private boolean gameIsOver = false; //boolean declaring when the game is or isn't over 
     
@@ -37,7 +38,14 @@ public class Rocket extends SmoothMover
     {
         reloadDelayCount = 5;
         reloadDelayWaveCount = 3;
-        addToVelocity(new Vector(180, 0.1));
+        
+        if(limited)
+        {
+            addToVelocity(new Vector(180, 0));
+        } else if(!limited) {
+            addToVelocity(new Vector(180, 0.1));
+        }
+        
     }
 
     /**
@@ -97,7 +105,7 @@ public class Rocket extends SmoothMover
         if(boosterOn)
         {
             setImage("rocketWithThrust.png");
-            addToVelocity(new Vector(getRotation(), speed));
+            addToVelocity(new Vector(getRotation(), thrustSpeed));
         }
         
         if(!boosterOn)
@@ -156,25 +164,35 @@ public class Rocket extends SmoothMover
     
     private void limit()
     {
-        boolean limited = false;
         Limiter limiter = (Limiter) getOneIntersectingObject(Limiter.class);
         
         if(limiter != null)
         {
             limited = true;
-            
-            while(limited)
-            {
-                timer--;
-                speed = 0;
-                if(timer <= 0)
-                {
-                    speed = 0.3;
-                    getWorld().removeObject(limiter);
-                    limited = false;
-                }
-            }
         }
+        
+        if(limited)
+        {
+            countTime();
+            thrustSpeed = 0;
+            limiter.speed = 0;
+            getWorld().showText("Avoid the freeze pills next time!" , 300, 400);
+        }
+        
+        if(timer <= 0)
+            {
+                thrustSpeed = 0.3;
+                getWorld().removeObject(limiter);
+                getWorld().showText(" " , 300, 400);
+                limited = false;
+                limiter.speed = 2;
+                timer = 500;
+            }
+    }
+    
+    private void countTime()
+    {
+        timer--;
     }
     
     /*
@@ -204,7 +222,10 @@ public class Rocket extends SmoothMover
     {
         if (Greenfoot.isKeyDown("space")) 
         {
-            fire();
+            if(!limited)
+            {
+                fire();
+            }
         }
         
         if (Greenfoot.isKeyDown("left"))
@@ -222,12 +243,18 @@ public class Rocket extends SmoothMover
         //slows down the momentum of the rocket when player feels it's going too fast.
         if (Greenfoot.isKeyDown("down"))
         {
-            move(-5);
+            if(!limited)
+            {
+                move(-5);
+            }
         }
         
         if(Greenfoot.isKeyDown("z"))
         {
-            startProtonWave();
+            if(!limited)
+            {
+                startProtonWave();
+            }
         }
     }
     

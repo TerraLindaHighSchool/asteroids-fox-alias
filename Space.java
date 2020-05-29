@@ -67,7 +67,7 @@ public class Space extends World
             addAliens(startAliens);
         }
         
-        if(limiters.size() <= 0)
+        if(limiters.size() <= 1)
         {
             addLimiters(startLimiters);
         }
@@ -102,8 +102,7 @@ public class Space extends World
     }
     
     /**
-     * Add a given number of aliens to the world. Aliens are only added into
-     * the left half of the world.
+     * Add a given number of aliens to the world.
      */
     private void addAliens(int count)
     {
@@ -119,8 +118,8 @@ public class Space extends World
     {
         for(int i = 0; i < count; i++)
         {
-            int x = Greenfoot.getRandomNumber(getWidth()/2);
-            int y = Greenfoot.getRandomNumber(getHeight()/2);
+            int x = Greenfoot.getRandomNumber(getWidth());
+            int y = Greenfoot.getRandomNumber(getHeight());
             addObject(new Limiter(), x, y);
         } 
     }

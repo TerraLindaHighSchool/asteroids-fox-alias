@@ -15,7 +15,7 @@ public class Rocket extends SmoothMover
 {
     private static final int gunReloadTime = 5; // The minimum delay between firing the gun.
     private static final int waveReloadTime = 100; //minimum delay for the proton wave.
-    private static final int shadowReloadTime = 500;
+    private static final int shadowReloadTime = 400;
     
     private int reloadDelayCount; // How long ago we fired the gun the last time.
     private int reloadDelayWaveCount; //How long ago we fired the wave.
@@ -26,10 +26,11 @@ public class Rocket extends SmoothMover
     private double thrustSpeed = 0.3; //The speed at which the rocket goes with thrust
     
     private int lives = 5;  //Number of lives a player has
-    private int timer = 500; 
+    private int timer = 100; 
     private int shadowTime = 500;
     private boolean limited = false;
     private boolean cloaked = false;
+    private boolean isPressed = false;
     
     private boolean gameIsOver = false; //boolean declaring when the game is or isn't over 
     
@@ -48,7 +49,6 @@ public class Rocket extends SmoothMover
         } else if(!limited) {
             addToVelocity(new Vector(180, 0.1));
         }
-        
     }
 
     /**
@@ -110,36 +110,33 @@ public class Rocket extends SmoothMover
     {
         if(cloaked)
         {
-            if(reloadDelayShadowCount >= shadowReloadTime)
-            {   
-                getImage().setTransparency(100);
-                shadowTimer();
-                getWorld().showText("Time: " + shadowTime, 250, 300);
-            }
+            isPressed = true;
+            getWorld().showText("Shadow Mode ON" , 300, 400);
+            getImage().setTransparency(100);
+            shadowTimer();
         }
         
         if(!Greenfoot.isKeyDown("tab"))
         {
-            shadowTimer();
-            
             if(shadowTime <= 0)
             {
                 getImage().setTransparency(255);
+                isPressed = false;
                 cloaked = false;
+                getWorld().showText("" , 300, 400);
+                reloadDelayShadowCount = 0;
             }
         }
         
-        if(!cloaked)
+        if(!cloaked && !isPressed)
         {
             restartTimer();
         }
-                        
-        getWorld().showText("cloaked: " + cloaked, 450, 300);
     }
     
     private void restartTimer()
     {
-        if(shadowTime == 0)
+        if(shadowTime <= 0)
         {
             shadowTime = 500;
         }
@@ -267,11 +264,14 @@ public class Rocket extends SmoothMover
      */
     private void gainLives()
     {
-        if(isTouching(Lives.class))
+        if(!cloaked)
         {
-            lives++;
-            Greenfoot.playSound("lifeGained.wav"); 
-        } 
+            if(isTouching(Lives.class))
+            {
+                lives++;
+                Greenfoot.playSound("lifeGained.wav"); 
+            }
+        }
     }
     
     /**
@@ -318,9 +318,12 @@ public class Rocket extends SmoothMover
         
         if(Greenfoot.isKeyDown("tab"))
         {
-            if(!limited)
+            if(reloadDelayShadowCount >= shadowReloadTime)
             {
-                cloaked = true;
+                if(!limited)
+                {
+                    cloaked = true;
+                }
             }
         } 
     }

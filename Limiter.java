@@ -1,14 +1,14 @@
  import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Limiter here.
+ * When a rocket touches this, it stops moving and is unable to use most of its weapons.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Jordan Miller
+ * @version 1.0
  */
 public class Limiter extends SmoothMover
 {
-    public static int speed = 2;
+    public static int speed = 2; //speed at which the limiter moves.
     
     public Limiter()
     {
@@ -21,11 +21,14 @@ public class Limiter extends SmoothMover
      */
     public void act() 
     {
-        move(speed);
-        randomTurns();
+        move(speed); //movement
+        randomTurns(); 
         checkAtEdge();
     }  
     
+    /*
+     * If the limiter is at the edge of the world, it will disappear.
+     */
     private void checkAtEdge()
     {
         if(isAtEdge())
@@ -34,6 +37,9 @@ public class Limiter extends SmoothMover
         }
     }
     
+    /*
+     * Programs some random turns into the limiter.
+     */
     private void randomTurns()
     {
         int angle = Greenfoot.getRandomNumber(360);
@@ -42,7 +48,7 @@ public class Limiter extends SmoothMover
         {
             if(angle <= 90)
             {
-                int variAngle1 = Greenfoot.getRandomNumber(30);
+                int variAngle1 = Greenfoot.getRandomNumber(30); 
                 
                 if(variAngle1 <= 15)
                 {
@@ -64,7 +70,8 @@ public class Limiter extends SmoothMover
             }
         }
         else if(angle >= 180) {
-               if(angle <= 270)
+               
+                if(angle <= 270)
                {
                    int variAngle3 = Greenfoot.getRandomNumber(30);
                    

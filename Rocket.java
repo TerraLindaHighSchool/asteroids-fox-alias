@@ -1,15 +1,17 @@
- import greenfoot.*;
+import greenfoot.*;
 import java.util.List;
 
 /**
  * A rocket that can be controlled by the arrowkeys: up, left, right.
  * The gun is fired by hitting the 'space' key. 'z' releases a proton wave.
  * When the rocket collides into an alien or an asteroid, it loses some lives.
+ * If it collides into a limiter, most of its functionality is disabled.
+ * the rocket can use shadow mode for a short time, allowing it to escape collision.
  * 
  * @author Poul Henriksen
  * @author Michael Kölling and Jordan Miller
  * 
- * @version 1.2
+ * @version 1.3
  */
 public class Rocket extends SmoothMover
 {
@@ -19,20 +21,19 @@ public class Rocket extends SmoothMover
     
     private int reloadDelayCount; // How long ago we fired the gun the last time.
     private int reloadDelayWaveCount; //How long ago we fired the wave.
-    private int reloadDelayShadowCount;
+    private int reloadDelayShadowCount;  //How long ago we used shadow mode.
+    private int lives = 5;  //Number of lives a player has
+    private int timer = 100; //The amount of time that a rocket is limited.
+    private int shadowTime = 500; //The amount of time the player has under shadow mode.
     
     private GreenfootImage rocket = new GreenfootImage("rocket.png");    
     private GreenfootImage rocketWithThrust = new GreenfootImage("rocketWithThrust.png");
     private double thrustSpeed = 0.3; //The speed at which the rocket goes with thrust
     
-    private int lives = 5;  //Number of lives a player has
-    private int timer = 100; 
-    private int shadowTime = 500;
-    private boolean limited = false;
-    private boolean cloaked = false;
-    private boolean isPressed = false;
-    
-    private boolean gameIsOver = false; //boolean declaring when the game is or isn't over 
+    private boolean limited = false; //Whether or not the rocket is disabled.
+    private boolean cloaked = false; //Whether or not the rocket is using shadow mode.
+    private boolean isPressed = false; //Whether or not the player is pressing tab to activate shadow mode.
+    private boolean gameIsOver = false; //boolean declaring when the game is or isn't ove.
     
     /**
      * Initialise this rocket.
@@ -43,6 +44,7 @@ public class Rocket extends SmoothMover
         reloadDelayWaveCount = 3;
         reloadDelayShadowCount = 0;
         
+        //Here is where the rocket speed slows down if it is limited.
         if(limited)
         {
             addToVelocity(new Vector(180, 0));
@@ -64,6 +66,7 @@ public class Rocket extends SmoothMover
         reloadDelayShadowCount++;
         move();
         
+        //If the player isn't under shadow mode, it is susceptible to being limited.
         if(!cloaked)
         {
             limit();
@@ -106,6 +109,10 @@ public class Rocket extends SmoothMover
         }
     }
     
+    /*
+     * Essentially, for a certain amount of time, the player can use shadow mode, with time in between activation periods. 
+     * This cloaks the rocket so that it can't collide into objects 
+     */
     private void shadowMode()
     {
         if(cloaked)
@@ -134,6 +141,9 @@ public class Rocket extends SmoothMover
         }
     }
     
+    /*
+     * Restarts the shadow mode timer.
+     */
     private void restartTimer()
     {
         if(shadowTime <= 0)
@@ -142,6 +152,9 @@ public class Rocket extends SmoothMover
         }
     }
     
+    /*
+     * Decrements the time that the rocket has left under shadow mode.
+     */
     private void shadowTimer()
     {
         shadowTime--;
@@ -218,6 +231,9 @@ public class Rocket extends SmoothMover
         }
     }
     
+    /*
+     * When the rocket runs into a limiter, this method is called to ensure the rocket's functions are disabled.
+     */
     private void limit()
     {
         Limiter limiter = (Limiter) getOneIntersectingObject(Limiter.class);
@@ -246,6 +262,9 @@ public class Rocket extends SmoothMover
         }
     }
     
+    /*
+     * Decrements the time left that the rocket has under the limiter.
+     */
     private void countTime()
     {
         timer--;
@@ -316,6 +335,7 @@ public class Rocket extends SmoothMover
             }
         }
         
+        //Starts the process of using shadow mode.
         if(Greenfoot.isKeyDown("tab"))
         {
             if(reloadDelayShadowCount >= shadowReloadTime)

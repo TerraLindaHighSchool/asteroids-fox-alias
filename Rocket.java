@@ -17,7 +17,7 @@ import java.util.List;
 public class Rocket extends SmoothMover
 {
     private static final int gunReloadTime = 5; // The minimum delay between firing the gun.
-    private static final int waveReloadTime = 100; //minimum delay for the proton wave.
+    private static final int waveReloadTime = 200; //minimum delay for the proton wave.
     private static final int shadowReloadTime = 400; // The minimum delay between using shadow mode.
     
     private int reloadDelayCount; // How long ago we fired the gun the last time.
@@ -44,7 +44,7 @@ public class Rocket extends SmoothMover
     public Rocket()
     {
         reloadDelayCount = 5;
-        reloadDelayWaveCount = 3;
+        reloadDelayWaveCount = 0;
         reloadDelayShadowCount = 0;
         
         //Here is where the rocket speed slows down if it is limited.
@@ -75,8 +75,7 @@ public class Rocket extends SmoothMover
             limit();
         }
         
-        gainLives();
-        countLives();
+        lives();
         shadowMode();
         win();
         
@@ -102,6 +101,23 @@ public class Rocket extends SmoothMover
         }
     }
     
+    /*
+     * Programs all life decrementing and incrementing scenarios.
+     */
+    private void lives()
+    {
+        gainLives();
+        countLives();
+        
+        if(lives <= 0)
+        {
+            gameIsOver = true;
+        }
+    }
+    
+    /*
+     * Programs the winning scenario.
+     */
     private void win()
     {
         Space space = (Space) getWorld();

@@ -5,35 +5,37 @@ import java.util.List;
  * A rocket that can be controlled by the arrowkeys: up, left, right.
  * The gun is fired by hitting the 'space' key. 'z' releases a proton wave.
  * When the rocket collides into an alien or an asteroid, it loses some lives.
- * If it collides into a limiter, most of its functionality is disabled.
- * the rocket can use shadow mode for a short time, allowing it to escape collision.
+ * If it collides into a limiter, most of its functionality is disabled, except for the AP shot.
+ * The rocket can use shadow mode for a short time, allowing it to escape collision.
+ * The AP shot can be fired for a small amount of time, and is especially useful when the rocket is limited.
  * 
  * @author Poul Henriksen
  * @author Michael Kölling and Jordan Miller
  * 
- * @version 1.3
+ * @version 1.4
  */
 public class Rocket extends SmoothMover
 {
     private static final int gunReloadTime = 5; // The minimum delay between firing the gun.
     private static final int waveReloadTime = 100; //minimum delay for the proton wave.
-    private static final int shadowReloadTime = 400;
+    private static final int shadowReloadTime = 400; // The minimum delay between using shadow mode.
     
     private int reloadDelayCount; // How long ago we fired the gun the last time.
     private int reloadDelayWaveCount; //How long ago we fired the wave.
     private int reloadDelayShadowCount;  //How long ago we used shadow mode.
-    private int lives = 5;  //Number of lives a player has
+    private int lives = 5;  //Number of lives a player has.
     private int timer = 100; //The amount of time that a rocket is limited.
     private int shadowTime = 500; //The amount of time the player has under shadow mode.
+    private int timesShot = 0; //The number of times the player has shot the AP shot.
     
     private GreenfootImage rocket = new GreenfootImage("rocket.png");    
     private GreenfootImage rocketWithThrust = new GreenfootImage("rocketWithThrust.png");
-    private double thrustSpeed = 0.3; //The speed at which the rocket goes with thrust
+    private double thrustSpeed = 0.3; //The speed at which the rocket goes with thrust.
     
     private boolean limited = false; //Whether or not the rocket is disabled.
     private boolean cloaked = false; //Whether or not the rocket is using shadow mode.
     private boolean isPressed = false; //Whether or not the player is pressing tab to activate shadow mode.
-    private boolean gameIsOver = false; //boolean declaring when the game is or isn't ove.
+    private boolean gameIsOver = false; //boolean declaring when the game is or isn't over.
     
     /**
      * Initialise this rocket.
@@ -248,7 +250,7 @@ public class Rocket extends SmoothMover
             countTime();
             thrustSpeed = 0;
             limiter.speed = 0;
-            getWorld().showText("Avoid the freeze pills next time!" , 300, 400);
+            getWorld().showText("Weapons disabled. Use AP Shot to defend!" , 300, 400);
         }
         
         if(timer <= 0)
@@ -346,8 +348,36 @@ public class Rocket extends SmoothMover
                 }
             }
         } 
+        
+        //Enables the user to use the AP shot, as well as prevent them from using it for too long or too frequently.
+        if(timesShot <= 10)
+        {
+            if(Greenfoot.isKeyDown("shift"))
+            {
+                apShot();
+                timesShot++;
+                getWorld().showText("AP Shot activated. Limited amount of tries left.", 300, 450);
+            } 
+            else
+            {
+                getWorld().showText("", 300, 450);
+            }
+        }
+        else if(timesShot >= 10)
+        {
+            getWorld().showText("", 300, 450);
+        }
     }
-
+    
+    /*
+     * Actually creates the AP shot depending on the rocket's speed and direction.
+     */
+    private void apShot()
+    {
+        APShot apShot = new APShot(getVelocity(), getRotation());
+        getWorld().addObject(apShot, getX(), getY());
+        apShot.move();
+    }
     
     /**
      * Fire a bullet if the gun is ready.
@@ -358,7 +388,7 @@ public class Rocket extends SmoothMover
         {
             Bullet bullet = new Bullet (getVelocity(), getRotation());
             getWorld().addObject (bullet, getX(), getY());
-            bullet.move ();
+            bullet.move();
             reloadDelayCount = 0;
         }
     }

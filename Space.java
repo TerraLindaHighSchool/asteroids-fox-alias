@@ -5,11 +5,11 @@ import java.util.List;
  * Space. Something for rockets to fly in. Covered with lots of different stars.
  * 
  * @author Michael Kölling and Jordan Miller
- * @version 1.2
+ * @version 1.3
  */
 public class Space extends World
 {
-    private Counter scoreCounter;
+    public Counter scoreCounter;
     private int startAsteroids = 4;
     private int startLives = 2;
     private int startAliens = 3;
@@ -177,6 +177,7 @@ public class Space extends World
         int currentScore = scoreCounter.getValue();
         
         addObject(new ScoreBoard(currentScore), x, y);
+        Greenfoot.stop();
     }
 
 }

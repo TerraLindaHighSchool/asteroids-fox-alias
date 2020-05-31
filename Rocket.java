@@ -12,7 +12,7 @@ import java.util.List;
  * @author Poul Henriksen
  * @author Michael Kölling and Jordan Miller
  * 
- * @version 1.4
+ * @version 1.5
  */
 public class Rocket extends SmoothMover
 {
@@ -35,7 +35,8 @@ public class Rocket extends SmoothMover
     private boolean limited = false; //Whether or not the rocket is disabled.
     private boolean cloaked = false; //Whether or not the rocket is using shadow mode.
     private boolean isPressed = false; //Whether or not the player is pressing tab to activate shadow mode.
-    private boolean gameIsOver = false; //boolean declaring when the game is or isn't over.
+    private boolean gameIsOver = false; //Boolean declaring when the game is or isn't over.
+    private boolean playWinningSound = false; //Boolean that helps to play a winning sound when the player gets a score higher than 100.
     
     /**
      * Initialise this rocket.
@@ -77,6 +78,7 @@ public class Rocket extends SmoothMover
         gainLives();
         countLives();
         shadowMode();
+        win();
         
         //These if statements prevent a previous IllegalStateException error with the rocket out of the world
         if(!gameIsOver) 
@@ -91,8 +93,26 @@ public class Rocket extends SmoothMover
         
         if(gameIsOver) 
         {
+            if(playWinningSound)
+            {
+                Greenfoot.playSound("youWin.wav");
+            }
+            
             space.gameOver();
         }
+    }
+    
+    private void win()
+    {
+        Space space = (Space) getWorld();
+        int winningScore = space.scoreCounter.getValue();
+        
+        //Get a score of 100 and win the game!
+        if(winningScore >= 100)
+        {
+            gameIsOver = true;
+            playWinningSound = true;
+        }  
     }
 
     /*

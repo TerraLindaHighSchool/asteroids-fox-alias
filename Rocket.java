@@ -74,8 +74,9 @@ public class Rocket extends SmoothMover
         {
             limit();
         }
-        
-        lives();
+        gainLives();
+        countLives();
+
         shadowMode();
         win();
         
@@ -90,14 +91,19 @@ public class Rocket extends SmoothMover
             checkAlienCollision();
         }
         
+        
         if(gameIsOver) 
         {
             if(playWinningSound)
             {
                 Greenfoot.playSound("youWin.wav");
+                space.gameOver();
+                Greenfoot.stop();
             }
-            
-            space.gameOver();
+            else
+            {
+                space.gameOver();
+            }
         }
     }
     

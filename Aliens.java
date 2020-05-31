@@ -37,8 +37,11 @@ public class Aliens extends SmoothMover
             
             if(resilience <= 0)
             {
+                Space space = (Space) getWorld();
+                
                 ((Space)getWorld()).updateScore(pointsToAdd);
                 Greenfoot.playSound("Explosion.wav");
+                space.addObject(new Explosion(), getX(), getY());
                 getWorld().removeObject(this);
             }
         }

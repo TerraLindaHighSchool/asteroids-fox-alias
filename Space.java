@@ -3,6 +3,7 @@ import java.util.List;
 
 /**
  * Space. Something for rockets to fly in. Covered with lots of different stars.
+ * Free background music courtesy of Michael Picher.
  * 
  * @author Michael Kölling and Jordan Miller
  * @version 1.3
@@ -10,6 +11,7 @@ import java.util.List;
 public class Space extends World
 {
     public Counter scoreCounter;
+    
     private int startAsteroids = 4;
     private int startLives = 2;
     private int startAliens = 3;
@@ -38,8 +40,10 @@ public class Space extends World
         scoreCounter = new Counter("Score: ");
         addObject(scoreCounter, 60, 480);
 
-        Explosion.initializeImages();
         ProtonWave.initializeImages();
+        
+        GreenfootSound backgroundMusic = new GreenfootSound("backgroundMusic.mp3"); //Our background music
+        backgroundMusic.playLoop();
     }
     
     /*
@@ -177,7 +181,6 @@ public class Space extends World
         int currentScore = scoreCounter.getValue();
         
         addObject(new ScoreBoard(currentScore), x, y);
-        Greenfoot.stop();
     }
 
 }

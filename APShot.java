@@ -42,12 +42,14 @@ public class APShot extends SmoothMover
     {
         List<Asteroid> asteroids = getIntersectingObjects(Asteroid.class);
         List<Aliens> aliens = getIntersectingObjects(Aliens.class);
+        Space space = (Space) getWorld();
         
         for(Asteroid asteroid : asteroids)
         {
             if(asteroid != null)
             {
                 ((Space)getWorld()).updateScore(pointsToAdd);
+                space.addObject(new Explosion(), asteroid.getX(), asteroid.getY());
                 getWorld().removeObject(asteroid);
             }
         }
@@ -57,6 +59,7 @@ public class APShot extends SmoothMover
             if(alien != null)
             {
                 ((Space)getWorld()).updateScore(alienPoints);
+                space.addObject(new Explosion(), alien.getX(), alien.getY());
                 getWorld().removeObject(alien);
             }
         }
